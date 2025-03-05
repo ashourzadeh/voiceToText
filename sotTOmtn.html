@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>تبدیل گفتار به متن</title>
+    <link rel="icon" href="img/ihimlogo.png">
+    <style>
+        body {
+            font-family: 'b yekan',Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h2 {
+            font-family: 'b yekan';
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+            font-size: 16px;
+            font-family: 'b yekan';
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px #c7c7c7;
+            border-style: dashed;
+        }
+        /*-----------Button-----------*/
+        #buttdivsection {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: nowrap;
+        }
+        #stopbut {
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #0b57d0;
+            color: #fff;
+            font-family: 'b yekan';
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 60px;
+            text-align: center;
+            transition: all 0.8s;
+            display: none;
+        }
+        #stopbut:hover {
+            background-color: #696969 !important;
+            transition: all 0.8s;
+        }
+        #startbut {
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #0b57d0;
+            color: #fff;
+            font-family: 'b yekan';
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 60px;
+            text-align: center;
+            transition: all 0.8s;
+        }
+        #startbut:hover {
+            background-color: #b0cdf7 !important;
+            transition: all 0.8s;
+        }
+        #copybutt {
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px dashed #fff;
+            margin: 0 10px;
+            font-family: 'b yekan';
+            cursor: pointer;
+            transition: all 0.8s;
+        }
+        #copybutt:hover {
+            background-color: #fff;
+            color: #000;
+            transition: all 0.8s;
+            border: 1px dashed #000;
+        }
+        /*-----------Button-----------*/
+        #logoihim {
+            width: 140px;
+        }
+    </style>
+</head>
+<body>
+<img src="img/ihimlogo.png" id="logoihim">
+<h2>مرکز آموزش های بین المللی IHIM</h2>
+<textarea id="result" placeholder="نتیجه گفتار شما ..."></textarea>
+<br><br>
+<div id="buttdivsection">
+<button onclick="startListening()" id="startbut">شروع</button>
+<button onclick="stopListening()" id="stopbut">پایان</button>
+<button onclick="myFuncCopyText()" id="copybutt">ذخیره متن</button>
+</div>
+
+<script>
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+    } else if ('SpeechRecognition' in window) {
+        recognition = new SpeechRecognition();
+    } else {
+        alert('مرورگر شما از اجازه استفاده از میکروفن ندارد!');
+    }
+
+    recognition.lang = 'fa-IR';
+    recognition.interimResults = true;
+    recognition.continuous = true; 
+    recognition.onresult = function(event) {
+        let result = '';
+        for (let i = 0; i < event.results.length; i++) {
+            result += event.results[i][0].transcript + ' ';
+        }
+        document.getElementById('result').value = result;
+    };
+
+    function startListening() {
+        recognition.start();
+        document.getElementById('stopbut').style.display = "block";
+        document.getElementById('startbut').style.display = "none";
+    }
+
+    function stopListening() {
+        recognition.stop();
+        document.getElementById('stopbut').style.display = "none";
+        document.getElementById('startbut').style.display = "block";
+    }
+
+
+    function myFuncCopyText() {
+      var copyText = document.getElementById("result");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); 
+      navigator.clipboard.writeText(copyText.value);
+      alert("ذخیره شد : " + copyText.value);
+    }
+</script>
+
+</body>
+</html>
